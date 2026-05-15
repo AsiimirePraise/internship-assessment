@@ -2,6 +2,7 @@ import os
 import sys
 import tempfile
 import json
+import time
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -17,14 +18,29 @@ load_dotenv()
 
 app = FastAPI(title=" API")
 
+START_TIME = time.time()
+
+
+@app.get("/health", summary="Health check", tags=["Health"])
+def health():
+    """Returns service health and uptime in seconds."""
+    uptime_seconds = int(time.time() - START_TIME)
+    return {"status": "ok", "uptime_seconds": uptime_seconds}
+
+
+@app.get("/", summary="Root", include_in_schema=False)
+def root():
+    """Basic root endpoint to confirm the service is running."""
+    return {"message": "Amaka AI backend is running. Visit /docs for API docs."}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
         "https://localhost:3000",
         "https://localhost:3001",
-        "https://voice-bridger.onrender.com",
-        os.getenv("FRONTEND_URL", "https://voice-bridger.onrender.com"),
+        "https://amaka-ai.onrender.com",
+        os.getenv("FRONTEND_URL", "https://amaka-ai.onrender.com"),
     ],
     allow_credentials=True,
     allow_methods=["*"],
