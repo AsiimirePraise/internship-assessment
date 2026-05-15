@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from dotenv import load_dotenv
 
+
 # Support both local and package imports
 try:
     from .backend.pipeline import run_pipeline
@@ -15,9 +16,24 @@ except ImportError:
     from backend.pipeline import run_pipeline
 
 load_dotenv()
-
 app = FastAPI(title=" API")
 
+# Add CORS middleware early so it applies to all routes (including /docs)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "https://localhost:3000",
+        "https://localhost:3001",
+        "https://amaka-ai.onrender.com",
+        os.getenv("FRONTEND_URL", "https://amaka-ai.onrender.com"),
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Record start time for uptime reporting
 START_TIME = time.time()
 
 
@@ -32,20 +48,6 @@ def health():
 def root():
     """Basic root endpoint to confirm the service is running."""
     return {"message": "Amaka AI backend is running. Visit /docs for API docs."}
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://localhost:3000",
-        "https://localhost:3001",
-        "https://amaka-ai.onrender.com",
-        os.getenv("FRONTEND_URL", "https://amaka-ai.onrender.com"),
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 
 def event_generator(text_input, audio_file_path, target_language):
