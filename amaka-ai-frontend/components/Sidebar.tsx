@@ -41,11 +41,11 @@ export default function Sidebar({
 
   // Swipe to close gesture (mobile)
   const bind = useDrag(
-    ({ movement: [mx], direction: [xDir], distance, cancel }) => {
+    ({ movement: [mx], direction: [xDir], cancel }) => {
       // Only on mobile and when swiping left
       if (window.innerWidth > 768) return
 
-      if (xDir < 0 && distance > 100) {
+      if (xDir < 0 && Math.abs(mx) > 100) {
         onToggle()
         cancel()
       }
