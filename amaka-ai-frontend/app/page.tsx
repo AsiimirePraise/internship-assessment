@@ -14,21 +14,7 @@ import SuccessNotification from '@/components/SuccessNotification'
 import HistoryModal from '@/components/HistoryModal'
 import ParticlesBackground from '@/components/ParticlesBackground'
 import { notificationSounds } from '@/lib/sounds'
-
-interface HistoryItem {
-  id: string
-  title: string
-  timestamp: string
-  date: string
-  language: string
-  type: 'audio' | 'text'
-  data: {
-    transcript?: string
-    summary?: string
-    translation?: string
-    audioUrl?: string
-  }
-}
+import { usePersistedHistory, prependHistoryItem, deleteHistoryItem, clearHistory, type HistoryItem } from '@/lib/usePersistedHistory'
 
 export default function Home() {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark')
@@ -49,7 +35,7 @@ export default function Home() {
   const [audioUrl, setAudioUrl] = useState('')
   const [showSuccess, setShowSuccess] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [historyItems, setHistoryItems] = useState<HistoryItem[]>([])
+  const [historyItems, setHistoryItems] = usePersistedHistory()
 
   // Alerts state
   const [alerts, setAlerts] = useState<Array<{
@@ -194,7 +180,7 @@ export default function Home() {
           audioUrl: processedAudioUrl,
         }
       }
-      setHistoryItems(prev => [newHistoryItem, ...prev])
+      prependHistoryItem(setHistoryItems, newHistoryItem)
 
     } catch (error: any) {
       console.error('Pipeline error:', error)
@@ -220,7 +206,7 @@ export default function Home() {
   }
 
   const handleDeleteHistoryItem = (id: string) => {
-    setHistoryItems(prev => prev.filter(item => item.id !== id))
+    deleteHistoryItem(setHistoryItems, id)
     addAlert('info', 'Deleted', 'History item deleted successfully.')
   }
 
@@ -238,7 +224,7 @@ export default function Home() {
   }
 
   const handleClearAllHistory = () => {
-    setHistoryItems([])
+    clearHistory(setHistoryItems)
     setHistoryModalOpen(false)
     addAlert('info', 'Cleared', 'All history has been cleared.')
   }
@@ -368,7 +354,7 @@ export default function Home() {
               </div>
 
               {/* Theme Toggle */}
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <span className="text-xs sm:text-sm text-gray-400 font-semibold">Theme</span>
                 <button
                   onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
@@ -380,7 +366,7 @@ export default function Home() {
                     <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                   )}
                 </button>
-              </div>
+              </div> */}
             </div>
           </header>
 

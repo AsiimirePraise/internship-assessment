@@ -325,7 +325,7 @@ export default function InputSection({
                     fileInputRef.current?.click()
                   }
                 }}
-                className="border-2 border-dashed border-accent/20 rounded-xl p-4 text-center cursor-pointer hover:border-accent/40 hover:bg-primary-light/30 transition-all h-[120px] sm:h-[140px] flex flex-col items-center justify-center relative backdrop-blur-sm"
+                className="border-2 border-dashed border-accent/20 rounded-xl p-4 text-center cursor-pointer hover:border-accent/40 hover:bg-primary-light/30 transition-all h-auto sm:h-[140px] flex flex-col items-center justify-center relative backdrop-blur-sm"
               >
                 {audioFile ? (
                   <div className="w-full h-full flex flex-col">
@@ -411,14 +411,14 @@ export default function InputSection({
                     </div>
                     <p className="text-white font-bold text-sm">Click to upload audio</p>
                     <p className="text-xs text-gray-400 font-semibold">or drag and drop</p>
-                    <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+                    <div className="mt-3 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2 w-full">
                       <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation()
                           fileInputRef.current?.click()
                         }}
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-primary-light/70 border border-accent/20 text-xs font-bold text-white hover:border-accent/40 hover:bg-primary-light transition-colors"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary-light/70 border border-accent/20 text-xs font-bold text-white hover:border-accent/40 hover:bg-primary-light transition-colors"
                       >
                         <Upload className="w-3.5 h-3.5" />
                         Upload file
@@ -430,7 +430,7 @@ export default function InputSection({
                           startRecording()
                         }}
                         disabled={isProcessing}
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-accent to-accent-hover text-xs font-bold text-white hover:shadow-lg hover:shadow-accent/30 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-accent to-accent-hover text-xs font-bold text-white hover:shadow-lg hover:shadow-accent/30 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                       >
                         <Mic className="w-3.5 h-3.5" />
                         Record audio
